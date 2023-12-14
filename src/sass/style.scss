@@ -1,13 +1,13 @@
-@import url('https://fonts.googleapis.com/css?family=Oswald:400,600|Sacramento|Source+Sans+Pro:300&subset=latin-ext');
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins:wght@300&display=swap');
 
 /* Variables */
 
 $color-light: #fff;
 $color-dark: #444;
+$color-darker: #222425;
 
-$font-logo: 'Sacramento', cursive;
-$font-header: 'Oswald', sans-serif;
-$font-text: 'Source Sans Pro', sans-serif;
+$font-header: 'Abril Fatface', serif;
+$font-text: 'Poppins', sans-serif;
 
 /* Global */
 
@@ -15,8 +15,15 @@ $font-text: 'Source Sans Pro', sans-serif;
   box-sizing: border-box;
 }
 
+*a {
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  color: $color-dark;
+}
+
 body {
-  background: $color-light;
+  background: $color-darker;
   font-family: $font-text;
   color: $color-dark;
   font-weight: 300;
@@ -25,8 +32,9 @@ body {
 }
 
 .container {
-  max-width: 1140px;
+  max-width: 1440px;
   margin: 0 auto;
+  
 }
 
 .section-title {
@@ -45,7 +53,9 @@ body {
 /* Layout */
 .wrapper {
   display: flex;
-  margin-left: 10px;
+  
+  //margin-left: 10px;
+  
 }
 
 .sidebar {
@@ -54,6 +64,8 @@ body {
 
 .posts {
   flex: 2 0 0;
+  padding: auto;
+  position: relative;
 }
 
 .sidebar, .posts {
@@ -62,11 +74,13 @@ body {
   padding: 40px;
   border: 1px solid $color-dark;
   border-radius: 5px;
+  height: 70vh;
+  min-height: 100%;
 }
 
 /* Logo */
 .logo {
-  font-family: $font-logo;
+  font-family: $font-header;
   font-weight: 400;
   font-size: 104px;
   line-height: 1;
@@ -91,8 +105,8 @@ body {
   }
 }
 
-/* Authors */
-.authors {
+/* Section */
+.section {
   li {
     margin-bottom: 12px;
   }
@@ -100,14 +114,25 @@ body {
 
 /* Post */
 .post {
-  display: none;
+  opacity: 0;
+  margin-right: 10px;
+  padding-right: 5px;
+  transition: opacity 0.3s ease-in-out;
+  position: absolute;
+  z-index: 1;
 
   &.active {
-    display: block;
+    opacity: 1;
+    z-index: 2;
+    min-height: min-content;
   }
 }
 
-.post-author {
+// .post-content {
+ 
+// }
+
+.post-section {
   font-style: italic;
 }
 
@@ -116,5 +141,6 @@ body {
 
   p {
     margin: 0 10px 0 0;
+    
   }
 }
