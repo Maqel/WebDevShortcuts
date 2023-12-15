@@ -1,5 +1,3 @@
-
-
 body {
   background: $color-darker;
   font-family: $font-text;
@@ -30,14 +28,14 @@ body {
   .sidebar {
     margin: 1em;
 
-    a{
+    a {
       color: $color-light;
 
       &:hover {
         color: lighten($color-brightest, 50%);
       }
     }
-    
+
     .section-title {
       color: $color-title;
       font-size: 22px;
@@ -71,7 +69,7 @@ body {
     transition: opacity 0.3s ease-in-out;
     position: absolute;
     z-index: 1;
-  
+
     &.active {
       opacity: 1;
       z-index: 2;
@@ -118,7 +116,6 @@ body {
   line-height: 1;
   text-align: center;
   color: $color-title;
-  
 
   h1 {
     //cursor: pointer;
