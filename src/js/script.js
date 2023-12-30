@@ -152,9 +152,10 @@
     /*[-DONE-] find categories wrapper*/
       const categoryWrapper = article.querySelector(optCategorySelector);
       /*[-DONE-] get categories from data-category attribute*/
-      const categories = article.getAttribute('data-category');
+      const categories = article.getAttribute('data-categories');
+      console.log('categories', categories);
       /*[-DONE-] generate HTML of the link*/
-      const linkCategory = '<p class="post-category"><a href="#category-' + categories + '"><span>by ' + categories + '</span></a></p>';
+      const linkCategory = '<p class="post-category"><a href="#category-' + categories + '"><span>' + categories + '</span></a></p>';
       /*[-DONE-] insert HTML of all the links into the categories wrapper*/
       categoryWrapper.innerHTML = linkCategory;
     } /*[-DONE-] END LOOP: for every article:*/
