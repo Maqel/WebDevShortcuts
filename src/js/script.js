@@ -5,7 +5,8 @@
     optTitleSelector = '.post-title',
     optTitleListSelector = '.titles',
     optArticleTagsSelector = '.post-tags .list',
-    optCategorySelector = '.post .post-category';
+    optCategorySelector = '.post .post-category',
+    optTagsListSelector = '.tags.list';
 
   /* TITLE */
   const titleClickHandler = function (event) {
@@ -74,6 +75,8 @@
 
   /* TAGS */
   function generateTags() {
+    /* [NEW] create a new variable allTags with an empty array */
+    let allTags = [];
     /*[DONE] find all articles */
     const articles = document.querySelectorAll(optArticleSelector);
     /*[DONE] START LOOP: for every article: */
@@ -90,16 +93,26 @@
       /*[DONE] START LOOP: for each tag */
       for (let tag of articleTagsArray) {
         /*[DONE] generate HTML of the link */
-        const generatedTags =
+        const linkHTML =
           '<li><a href="#tag-' + tag + '"><span>' + tag + '</span></a></li>';
         /*[DONE] add generated code to html variable */
-        html = html + ' ' + generatedTags;
+        html = html + ' ' + linkHTML;
+        /* [NEW] check if this link is NOT already in allTags */
+        if(allTags.indexOf(linkHTML) == -1){
+        /* [NEW] add generated code to allTags array */
+          allTags.push(linkHTML);
+        }
         /*[DONE] END LOOP: for each tag */
       }
       /*[DONE] insert HTML of all the links into the tags wrapper */
       tagsWrapper.innerHTML = tagsWrapper.innerHTML + html;
       /*[DONE] END LOOP: for every article: */
     }
+    /* [NEW] find list of tags in right column */
+    const tagList = document.querySelector(optTagsListSelector);
+    /* [NEW] add html from allTags to tagList */
+    tagList.innerHTML = allTags.join(' ');
+    console.log('allTags: ',allTags );
   }
   generateTags();
 
@@ -144,18 +157,22 @@
   }
   addClickListenersToTags();
 
-  function generateCategories(){
+  function generateCategories() {
     /*[-DONE-] find all articles*/
     const articles = document.querySelectorAll(optArticleSelector);
     /*[-DONE-][START LOOP]: for every article:*/
-    for (let article of articles){
-    /*[-DONE-] find categories wrapper*/
+    for (let article of articles) {
+      /*[-DONE-] find categories wrapper*/
       const categoryWrapper = article.querySelector(optCategorySelector);
       /*[-DONE-] get categories from data-category attribute*/
-      const categories = article.getAttribute('data-categories');
-      console.log('categories', categories);
+      const categories = article.getAttribute('data-category');
       /*[-DONE-] generate HTML of the link*/
-      const linkCategory = '<p class="post-category"><a href="#category-' + categories + '"><span>' + categories + '</span></a></p>';
+      const linkCategory =
+        '<p class="post-category"><a href="#category-' +
+        categories +
+        '"><span>' +
+        categories +
+        '</span></a></p>';
       /*[-DONE-] insert HTML of all the links into the categories wrapper*/
       categoryWrapper.innerHTML = linkCategory;
     } /*[-DONE-] END LOOP: for every article:*/
@@ -172,20 +189,22 @@
     /* make a new constant "category" and extract tag from the "href" constant*/
     const category = href.replace('#category-', '');
     /* find all tagCategory links with class active*/
-    const activeCategories = document.querySelectorAll('a .active[href^="#category-"]');
+    const activeCategories = document.querySelectorAll(
+      'a .active[href^="#category-"]'
+    );
     /* [START LOOP]: for each active tagCategory link*/
-    for(let activeCategory of activeCategories){
+    for (let activeCategory of activeCategories) {
       /* remove class active */
-      activeCategory.removeClass('active');
+      activeCategory.classList.remove('active');
       /* [END LOOP]: for each active tagCategory link*/
     }
     /* find all tag links with "href" attribute equal to the "href" constant*/
     const categoriesLinks = document.querySelectorAll('[href^="#category-"]');
     /* [START LOOP]: for each found category link*/
-    for(let categoryLink of categoriesLinks){
-    /* Add class active */
-      categoryLink.addClass('active'); 
-    /* [END LOOP]: for each found category link*/
+    for (let categoryLink of categoriesLinks) {
+      /* Add class active */
+      categoryLink.classList.add('active');
+      /* [END LOOP]: for each found category link*/
     }
     /* execute function "generateTitleLinks" with article selector as argument*/
     generateTitleLinks('[data-category="' + category + '"]');
@@ -195,10 +214,10 @@
     /* find all links to tagCategories*/
     const links = document.querySelectorAll('[href^="#category-"]');
     /* [START LOOP:] for each link*/
-    for (const link of links){
-    /* add tagClickHandler as event listener for that link*/
+    for (const link of links) {
+      /* add tagClickHandler as event listener for that link*/
       link.addEventListener('click', categoryClickHandler);
-    /* [END LOOP]: for each link*/
+      /* [END LOOP]: for each link*/
     }
   }
   addClickListenersToCategories();
