@@ -24,7 +24,8 @@ body {
   .sidebar {
     margin: 1em;
 
-    a {
+    .titles a,
+    .section a {
       color: $color-light;
 
       &:hover {
@@ -104,28 +105,30 @@ body {
 .post-category a {
   color: $color-title;
 }
-//   /* Lists */
 
-//   .list {
-//     list-style-type: none;
-//     margin: 0;
-//     padding: 0;
+/*TAGS*/
 
-//     .active {
-//       font-weight: bold;
-//     }
-//   }
+.tag-size-1 {
+  font-size: 14px;
+  color: #9980FA;
+}
 
-//   .list-horizontal {
-//     li {
-//       display: inline-block;
-//     }
-//   }
+.tag-size-2 {
+  font-size: 16px;
+  color: #6F1E51;
+}
 
-//   /* Section */
-//   .section {
-//     li {
-//       margin-bottom: 12px;
-//     }
-//   }
+.tag-size-3 {
+  font-size: 18px;
+  color: #1289A7;
+}
 
+.tag-size-4 {
+  font-size: 20px;
+  color: #009432;
+}
+
+.tag-size-5 {
+  font-size: 22px;
+  color: #FFC312;
+}
