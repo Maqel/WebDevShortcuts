@@ -6,7 +6,8 @@
     titleSelector: '.post-title',
     titleListSelector: '.titles',
     articleTagsSelector: '.post-tags .list',
-    categorySelector: '.post .post-category',
+    categorySelector: '.post-category',
+    CategoryListSelector: '.section.list',
     tagsListSelector: '.tags.list',
     cloudClassCount: 5,
     cloudClassPrefix:  'tag-size-'
@@ -47,9 +48,7 @@
     const titleList = document.querySelector(opts.titleListSelector);
     titleList.innerHTML = '';
     /* [DONE] find all the articles and save them to variable: articles */
-    const articles = document.querySelectorAll(
-      opts.articleSelector + customSelector
-    );
+    const articles = document.querySelectorAll(opts.articleSelector + customSelector);
     let html = '';
     /* [DONE] for each article */
     for (let article of articles) {
@@ -60,19 +59,20 @@
       /* [DONE] get the title from the title element */
       const title = titleElement.innerHTML;
       /* [DONE] create HTML of the link */
-      const link =
-        '<li><a href="#' + articleId + '"><span>' + title + '</span></a></li>';
+      const link = '<li><a href="#' + articleId + '"><span>' + title + '</span></a></li>';
       /* [DONE] insert link into titleList */
       titleList.insertAdjacentHTML('beforeend', link);
       /* [DONE] insert link into html variable */
       html = html + link;
+      /*[-DONE-][END-LOOP]: for each article*/
     }
     titleList.innerHTML = html;
-
+    /*[DONE] Add tagClickHandler as event listener for that link*/
     const links = document.querySelectorAll('.titles a');
-
+    /*[DONE][START LOOP]: For each link*/
     for (let link of links) {
       link.addEventListener('click', titleClickHandler);
+      /*[END LOOP]: For each link*/
     }
   }
   generateTitleLinks();
@@ -92,7 +92,6 @@
       if(tags[tag] < params.min){
         params.min = tags[tag];
       }
-      //console.log(tag + 'is used ' + tags[tag] + ' times');
     } /*[DONE][END LOOP]: For each tag*/
     return params;
   }
@@ -114,8 +113,7 @@
     /*[DONE] START LOOP: for every article: */
     for (let article of articles) {
       /*[DONE] find tags wrapper */
-      const tagsWrapper = article.querySelector(opts.articleTagsSelector);
-      tagsWrapper.innerHTML = '';
+      const tagList = article.querySelector(opts.articleTagsSelector);
       /*[DONE] make html variable with empty string */
       let html = '';
       /*[DONE] get tags from data-tags attribute */
@@ -125,8 +123,7 @@
       /*[DONE] START LOOP: for each tag */
       for (let tag of articleTagsArray) {
         /*[DONE] generate HTML of the link */
-        const linkHTML =
-          '<li><a href="#tag-' + tag + '"><span>' + tag + '</span></a></li>';
+        const linkHTML = '<li><a href="#tag-' + tag + '"><span>' + tag + '</span></a></li>';
         /*[DONE] add generated code to html variable */
         html = html + ' ' + linkHTML;
         /* [NEW] check if this link is NOT already in allTags */
@@ -139,21 +136,19 @@
         /*[DONE] END LOOP: for each tag */
       }
       /*[DONE] insert HTML of all the links into the tags wrapper */
-      tagsWrapper.innerHTML = tagsWrapper.innerHTML + html;
+      tagList.innerHTML =  html;
       /*[DONE] END LOOP: for every article: */
     }
     /* [NEW] find list of tags in right column */
     const tagList = document.querySelector(opts.tagsListSelector);
     const tagsParams = calculateTagsParams(allTags);
-    console.log('tagsParams:', tagsParams);
     /* [NEW] create variable for all links HTML code */
     let allTagsHTML = '';
-
     /* [NEW] START LOOP: for each tag in allTags: */
     for (let tag in allTags) {
       /* [NEW] generate code of a link and add it to allTagsHTML */
       const tagLinkHTML = '<li><a href=#tag-' + tag + ' class="' +  calculateTagClass(allTags[tag], tagsParams) + '"<span>' +  tag  + '</span></a></li>';
-      console.log('tagLinkHTML:', tagLinkHTML);
+      //console.log('tagLinkHTML:', tagLinkHTML);
       allTagsHTML += tagLinkHTML;
       /* [NEW] END LOOP: for each tag in allTags: */
     }
@@ -193,7 +188,7 @@
 
   function addClickListenersToTags() {
     /*[DONE] find all links to tags */
-    const tagLinks = document.querySelectorAll('.list.list-horizontal a');
+    const tagLinks = document.querySelectorAll('.tags a, .post-tags a');
     /*[DONE] START LOOP: for each link */
     for (let tagLink of tagLinks) {
       /*[DONE] add tagClickHandler as event listener for that link */
