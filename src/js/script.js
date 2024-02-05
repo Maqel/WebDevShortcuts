@@ -1,5 +1,15 @@
 'use strict';
 {
+
+  /*TEMPLATE*/
+  const templates = {
+    articleLink: Handlebars.compile(document.querySelector('#template-article-link').innerHTML),
+    tagLink: Handlebars.compile(document.querySelector('#template-tag-link').innerHTML),
+    tagCloudLink: Handlebars.compile(document.querySelector('#template-tag-cloud-link').innerHTML),
+    categoriesListLink: Handlebars.compile(document.querySelector('#template-categories-list-link').innerHTML),
+    categoryLink: Handlebars.compile(document.querySelector('#template-category-link').innerHTML),
+  };
+  
   /*VARIABLES*/
   const opts = {
     articleSelector: '.post',
@@ -7,7 +17,7 @@
     titleListSelector: '.titles',
     articleTagsSelector: '.post-tags .list',
     categorySelector: '.post-category',
-    CategoryListSelector: '.section.list',
+    categoryListSelector: '.section.list',
     tagsListSelector: '.tags.list',
     cloudClassCount: 5,
     cloudClassPrefix:  'tag-size-'
@@ -59,9 +69,10 @@
       /* [DONE] get the title from the title element */
       const title = titleElement.innerHTML;
       /* [DONE] create HTML of the link */
-      const link = '<li><a href="#' + articleId + '"><span>' + title + '</span></a></li>';
+      const linkHTMLData = {id: articleId, title: title};
+      const link = templates.articleLink(linkHTMLData);
       /* [DONE] insert link into titleList */
-      titleList.insertAdjacentHTML('beforeend', link);
+      titleList.insertAdjacentHTML('afterbegin', link);
       /* [DONE] insert link into html variable */
       html = html + link;
       /*[-DONE-][END-LOOP]: for each article*/
@@ -123,9 +134,10 @@
       /*[DONE] START LOOP: for each tag */
       for (let tag of articleTagsArray) {
         /*[DONE] generate HTML of the link */
-        const linkHTML = '<li><a href="#tag-' + tag + '"><span>' + tag + '</span></a></li>';
+        const tagHTMLData = { tagsId: tag, tagName: tag };
+        const tagHTML = templates.tagLink(tagHTMLData);
         /*[DONE] add generated code to html variable */
-        html = html + ' ' + linkHTML;
+        html = html + ' ' + tagHTML;
         /* [NEW] check if this link is NOT already in allTags */
         if (!allTags[tag]) {
           /* [NEW] add tag to allTags object */
@@ -143,17 +155,19 @@
     const tagList = document.querySelector(opts.tagsListSelector);
     const tagsParams = calculateTagsParams(allTags);
     /* [NEW] create variable for all links HTML code */
-    let allTagsHTML = '';
+    const allTagsData = {tags: []};
     /* [NEW] START LOOP: for each tag in allTags: */
     for (let tag in allTags) {
       /* [NEW] generate code of a link and add it to allTagsHTML */
-      const tagLinkHTML = '<li><a href=#tag-' + tag + ' class="' +  calculateTagClass(allTags[tag], tagsParams) + '"<span>' +  tag  + '</span></a></li>';
-      //console.log('tagLinkHTML:', tagLinkHTML);
-      allTagsHTML += tagLinkHTML;
+      allTagsData.tags.push({
+        tag: tag,
+        count: allTags[tag],
+        className: calculateTagClass(allTags[tag], tagsParams),
+      });
       /* [NEW] END LOOP: for each tag in allTags: */
     }
     /*[NEW] add HTML from allTagsHTML to tagList */
-    tagList.innerHTML = allTagsHTML;
+    tagList.innerHTML = templates.tagCloudLink(allTagsData);
   }
   generateTags();
 
@@ -200,26 +214,46 @@
 
   /*CATEGORIES*/
 
-  function generateCategories() {
-    /*[-DONE-] find all articles*/
+  const generateCategories = function (){
+    /* [NEW][DONE]create a new variable allCategories with an empty array */
+    let allCategories = [];
+    /*[DONE]find all articles*/
     const articles = document.querySelectorAll(opts.articleSelector);
-    /*[-DONE-][START LOOP]: for every article:*/
-    for (let article of articles) {
-      /*[-DONE-] find categories wrapper*/
+    /*[DONE]START LOOP for every article*/
+    for (let article of articles){
+      /*[DONE]make html variable with empty string*/
+      let html = '';
+      /*[DONE]get category from data-category attribute */
+      const category = article.getAttribute('data-category');
+      /*[DONE]generate HTML of the link*/
+      const categoryHTMLData = {category: category,};
+      const categoryHTML = templates.categoryLink(categoryHTMLData);
+      /*[DONE]add generated code to html variable*/
+      html = html + ' ' + categoryHTML;
+      /*[NEW][DONE]check if this link is NOT already in all Categories*/
+      if (!allCategories[category]){
+        /*[NEW][DONE]add generated code to all Authors array*/
+        allCategories[category] = 1;}
+      else {
+        allCategories[category]++;}
+      /*[DONE]insert HTML of all the links into the category wrapper*/
       const categoryWrapper = article.querySelector(opts.categorySelector);
-      /*[-DONE-] get categories from data-category attribute*/
-      const categories = article.getAttribute('data-category');
-      /*[-DONE-] generate HTML of the link*/
-      const linkCategory =
-        '<p class="post-category"><a href="#category-' +
-        categories +
-        '"><span>' +
-        categories +
-        '</span></a></p>';
-      /*[-DONE-] insert HTML of all the links into the categories wrapper*/
-      categoryWrapper.innerHTML = linkCategory;
-    } /*[-DONE-] END LOOP: for every article:*/
-  }
+      categoryWrapper.innerHTML = html;
+    } /*[DONE]END LOOP for every article*/
+    /*[NEW][DONE]find list of categories in right column*/
+    const categoriesList = document.querySelector(opts.categoryListSelector);
+    const allCategoriesData = { allCategories: [] };
+    /*[NEW][DONE]START LOOP: for each category in allCategories*/
+    for (let category in allCategories) {
+      /*[NEW][DONE]generate code of a link and it to allCategoriesHTML*/
+      allCategoriesData.allCategories.push({
+        category: category,
+        count: allCategories[category],
+      }); /*[NEW][DONE]END LOOP: for each category in allCategories*/
+    }
+    /*[NEW][DONE]add html from allCategories to authorList*/
+    categoriesList.innerHTML = templates.categoriesListLink(allCategoriesData);
+  };
   generateCategories();
 
   function categoryClickHandler(event) {
@@ -232,9 +266,7 @@
     /* make a new constant "category" and extract tag from the "href" constant*/
     const category = href.replace('#category-', '');
     /* find all tagCategory links with class active*/
-    const activeCategories = document.querySelectorAll(
-      'a .active[href^="#category-"]'
-    );
+    const activeCategories = document.querySelectorAll('a .active[href^="#category-"]');
     /* [START LOOP]: for each active tagCategory link*/
     for (let activeCategory of activeCategories) {
       /* remove class active */

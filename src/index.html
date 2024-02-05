@@ -194,6 +194,27 @@
         </section>
     </div>
   </div>
+  <script id="template-article-link" type="text/x-handlebars-template">
+  <li><a href="#{{ id }}"><span>{{ title }}</span></a></li>
+</script>
+<script id="template-tag-link" type="text/x-handlebars-template">
+  <li><a href='#tag-{{tagsId}}'><span>{{tagName}}</span></a></li>
+</script>
+<script id="template-category-link" type="text/x-handlebars-template">
+  <a href="#category-{{category}}"><span>{{category}}</span>
+</script>
+<script id="template-tag-cloud-link" type="text/x-handlebars-template">
+  {{#each tags}}
+    <li><a href='#tag-{{tag}}' class='{{className}}'>{{tag}}
+        ({{count}})</a></li>
+  {{/each}}
+</script>
+<script id="template-categories-list-link" type="text/x-handlebars-template">
+  {{#each allCategories}}
+    <li><a href='#category-{{category}}'>{{category}} ({{count}})</a></li>
+  {{/each}}
+</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.0/handlebars.min.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>
